@@ -46,7 +46,7 @@ pthread_mutex_t ControlNode::logControl_CS = PTHREAD_MUTEX_INITIALIZER;
 
 ControlNode::ControlNode()
 {
-    control_channel = nh_.resolveName("cmd_vel");
+    control_channel = nh_.resolveName("cmd_vel");     //rename
     dronepose_channel = nh_.resolveName("ardrone/predictedPose");
     command_channel = nh_.resolveName("tum_ardrone/com");
     takeoff_channel = nh_.resolveName("ardrone/takeoff");
