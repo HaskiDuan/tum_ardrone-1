@@ -91,6 +91,9 @@ tum_ardrone_gui::tum_ardrone_gui(QWidget *parent)
     QObject::connect( this, SIGNAL( setMotorSpeedsSignal(QString) ),
     		           this, SLOT( setMotorSpeedsSlot(QString) ) );
 
+    QObject::connect( this, SIGNAL( setArdroneStateSignal(QString) ),
+                       this, SLOT( setArdroneStateSlot(QString)) );
+
     QObject::connect( this, SIGNAL( closeWindowSignal() ),
     		           this, SLOT( closeWindowSlot() ) );
 
@@ -272,6 +275,10 @@ void tum_ardrone_gui::setMotorSpeedsSlot(QString s)
 {
 	ui.labelDroneMotors->setText(s);
 }
+void tum_ardrone_gui::setArdroneStateSlot(QString s)
+{
+    ui.plainTextEditArdroneStatus->setPlainText(s);
+}
 void tum_ardrone_gui::closeWindowSlot()
 {
 	closeWindow();
@@ -308,6 +315,14 @@ void tum_ardrone_gui::setPings(int p500, int p20000)
 {
 	emit setPingsSignal(p500, p20000);
 }
+
+//this is for getting the ardrone's state and show them in the gui
+void tum_ardrone_gui::setArdroneState(std::string s)
+{
+    emit setArdroneStateSignal(QString(s.c_str()));
+}
+
+
 void tum_ardrone_gui::closeWindow()
 {
 	emit closeWindowSignal();
@@ -416,3 +431,4 @@ ControlCommand tum_ardrone_gui::calcKBControl()
 
 	return c;
 }
+

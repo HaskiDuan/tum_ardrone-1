@@ -83,13 +83,61 @@ void RosThread::navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPtr)
 
 	if(navdataCount%10==0)
 	{
-		char buf[200];
-		snprintf(buf,200,"Motors: %f %f %f %f",
-				(float)navdataPtr->motor1,
+        char buf[500];
+        snprintf(buf,200,"Motors: %f %f %f %f",
+                (float)navdataPtr->motor1,
 				(float)navdataPtr->motor2,
 				(float)navdataPtr->motor3,
 				(float)navdataPtr->motor4);
 		gui->setMotorSpeeds(std::string(buf));
+
+        snprintf(buf,500,
+                 "Battery Status:   %d%%\n"
+                 "Acceleration:     ax %f  ay %f  az %f\n"
+                 "Linear Velocity:  vx %f  vy %f  vz %f\n"
+                 "Altitude:         %f\n"
+                 "Rotation:         row %f  pitch %f  yaw %f\n"
+                 "Motor Status:     motor1 %f  motor2 %f  motor3 %f  motor4 %f\n"
+                 "Magnitude:        magX %f  magY %f  magZ %f\n"
+                 "Presure:          %f\n"
+                 "Windspeed:        %f\n"
+                 "Windangle:        %f\n",
+                (int)navdataPtr->batteryPercent,
+
+                (float)navdataPtr->ax,
+                (float)navdataPtr->ay,
+                (float)navdataPtr->az,
+
+                (float)navdataPtr->vx,
+                (float)navdataPtr->vy,
+                (float)navdataPtr->vz,
+
+                (float)navdataPtr->altd,
+
+                (float)navdataPtr->rotX,
+                (float)navdataPtr->rotY,
+                (float)navdataPtr->rotZ,
+
+                (float)navdataPtr->motor1,
+                (float)navdataPtr->motor2,
+                (float)navdataPtr->motor3,
+                (float)navdataPtr->motor4,
+
+                (float)navdataPtr->magX,
+                (float)navdataPtr->magY,
+                (float)navdataPtr->magZ,
+
+                (float)navdataPtr->pressure,
+
+                (float)navdataPtr->wind_speed,
+
+                (float)navdataPtr->wind_angle);
+
+        gui->setArdroneState(std::string(buf));
+
+        //gui->setStateestimationInfo(str->data.substr(4,str->data.length()-4));
+
+
 	}
 	navdataCount++;
 }

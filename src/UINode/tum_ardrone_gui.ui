@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1068</width>
+    <width>1299</width>
     <height>679</height>
    </rect>
   </property>
@@ -277,19 +277,6 @@
      <string>Motors: -</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>30</y>
-      <width>100</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>RadioButton</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QGroupBox" name="groupBox_3">
    <property name="geometry">
@@ -505,159 +492,34 @@
     </property>
    </widget>
   </widget>
-  <widget class="QGroupBox" name="groupBox_7">
+  <widget class="QGroupBox" name="groupBox_8">
    <property name="geometry">
     <rect>
-     <x>640</x>
+     <x>650</x>
      <y>10</y>
-     <width>411</width>
-     <height>221</height>
+     <width>631</width>
+     <height>321</height>
     </rect>
    </property>
    <property name="title">
     <string>Drone Status</string>
    </property>
-   <widget class="QLabel" name="labelAcceleration">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>40</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Acceleration: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelBattery">
+   <widget class="QPlainTextEdit" name="plainTextEditArdroneStatus">
     <property name="geometry">
      <rect>
       <x>0</x>
       <y>20</y>
-      <width>191</width>
-      <height>17</height>
+      <width>611</width>
+      <height>301</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Battery: -</string>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
     </property>
-   </widget>
-   <widget class="QLabel" name="labelMag">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>60</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Mag: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelMag_2">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>80</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Pressure: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelMag_3">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>80</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Pressure: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelMag_4">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>100</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Windspeed: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelMag_5">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>120</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Windangle: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelMag_6">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>140</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Rot: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelMag_7">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>160</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Altd: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelMag_8">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>180</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Valocity: -</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelMag_9">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>200</y>
-      <width>191</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Motor: -</string>
+    <property name="readOnly">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

@@ -65,6 +65,7 @@ private slots:
     void setAutopilotInfoSlot(QString);
     void setStateestimationInfoSlot(QString);
     void setMotorSpeedsSlot(QString);
+    void setArdroneStateSlot(QString);
 
     void closeWindowSlot();
 
@@ -78,6 +79,7 @@ signals:
 	void setAutopilotInfoSignal(QString);
 	void setStateestimationInfoSignal(QString);
     void setMotorSpeedsSignal(QString);
+    void setArdroneStateSignal(QString);
 
 	void closeWindowSignal();
 
@@ -95,7 +97,9 @@ public:
     void setAutopilotInfo(std::string s);
     void setStateestimationInfo(std::string s);
     void setMotorSpeeds(std::string s);
+    void setArdroneState(std::string s);
     void closeWindow();
+
 
     // calculates KB command, based on currently pressed keys.
     ControlCommand calcKBControl();
