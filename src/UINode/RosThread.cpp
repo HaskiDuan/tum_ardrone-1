@@ -93,20 +93,20 @@ void RosThread::navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPtr)
 
         snprintf(buf,500,
                  "Battery Status:   %d%%\n"
-                 "Acceleration:     ax %f  ay %f  az %f\n"
-                 "Linear Velocity:  vx %f  vy %f  vz %f\n"
-                 "Altitude:         %f\n"
-                 "Rotation:         row %f  pitch %f  yaw %f\n"
-                 "Motor Status:     motor1 %f  motor2 %f  motor3 %f  motor4 %f\n"
-                 "Magnitude:        magX %f  magY %f  magZ %f\n"
-                 "Presure:          %f\n"
-                 "Windspeed:        %f\n"
-                 "Windangle:        %f\n",
+                 "Acceleration:     ax %.3f  ay %.3f  az %.3f\n"
+                 "Linear Velocity:  vx %.3f  vy %.3f  vz %.3f\n"
+                 "Altitude:         %.3fmm\n"
+                 "Rotation:         row %.3f  pitch %.3f  yaw %.3f\n"
+                 "Motor Status:     motor1 %.3f  motor2 %.3f  motor3 %.3f  motor4 %.3f\n"
+                 "Magnitude:        magX %d  magY %d  magZ %d\n"
+                 "Presure:          %d\n"
+                 "Windspeed:        %d\n"
+                 "Windangle:        %d\n",
                 (int)navdataPtr->batteryPercent,
 
-                (float)navdataPtr->ax,
-                (float)navdataPtr->ay,
-                (float)navdataPtr->az,
+                (float)navdataPtr->ax*10.0,
+                (float)navdataPtr->ay*10.0,
+                (float)navdataPtr->az*10.0,
 
                 (float)navdataPtr->vx,
                 (float)navdataPtr->vy,
@@ -123,15 +123,15 @@ void RosThread::navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPtr)
                 (float)navdataPtr->motor3,
                 (float)navdataPtr->motor4,
 
-                (float)navdataPtr->magX,
-                (float)navdataPtr->magY,
-                (float)navdataPtr->magZ,
+                (int)navdataPtr->magX,
+                (int)navdataPtr->magY,
+                (int)navdataPtr->magZ,
 
-                (float)navdataPtr->pressure,
+                (int)navdataPtr->pressure,
 
-                (float)navdataPtr->wind_speed,
+                (int)navdataPtr->wind_speed,
 
-                (float)navdataPtr->wind_angle);
+                (int)navdataPtr->wind_angle);
 
         gui->setArdroneState(std::string(buf));
 
