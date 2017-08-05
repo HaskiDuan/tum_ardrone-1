@@ -32,6 +32,7 @@
 #include "sensor_msgs/Joy.h"
 #include "std_srvs/Empty.h"
 #include "std_msgs/Empty.h"
+#include "sensor_msgs/Image.h"
 
 class tum_ardrone_gui;
 
@@ -54,6 +55,9 @@ private:
 	// the associated thread's run function.
 	void run();
 
+    //video topic
+    std::string video_channel;
+
 	// keep Running
 	bool keepRunning;
 
@@ -61,6 +65,8 @@ private:
 	ros::Subscriber dronepose_sub;
 	ros::Publisher vel_pub;
 	ros::Subscriber vel_sub;
+    ros::Publisher vid_pub;
+    ros::Subscriber vid_sub;
 	ros::Subscriber tum_ardrone_sub;
 	ros::Publisher tum_ardrone_pub;
 	ros::Subscriber navdata_sub;
@@ -103,6 +109,7 @@ public:
 	void droneposeCb(const tum_ardrone::filter_stateConstPtr statePtr);
 	void comCb(const std_msgs::StringConstPtr str);
 	void velCb(const geometry_msgs::TwistConstPtr vel);
+    void vidCb(const sensor_msgs::ImageConstPtr img);
 	void navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPtr);
 	void joyCb(const sensor_msgs::JoyConstPtr joy_msg);
 	void landCb(std_msgs::EmptyConstPtr);
