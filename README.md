@@ -31,6 +31,12 @@ catkin_make
 roslaunch tum_ardrone ardrone_driver.launch
 roslaunch tum_ardrone tum_ardrone.launch
 ```
+or use the follows
+```bash
+roslaunch tum_ardrone ardrone_driver.launch
+roslaunch tum_ardrone GUI_only.launch
+```
+
 
 #### Check status
 
