@@ -38,7 +38,7 @@ RosThread::RosThread()
 	lastJoyControlSent = ControlCommand(0,0,0,0);
 	lastL1Pressed = lastR1Pressed = false;
 
-    video_channel = nh_.resolveName("ardrone/image_raw");
+
 }
 
 RosThread::~RosThread(void)
@@ -82,8 +82,11 @@ void RosThread::velCb(const geometry_msgs::TwistConstPtr vel)
     velCount100ms++;
 }
 
-void RosThread::vidCb(const sensor_msgs::ImageConstPtr img)
+void RosThread::vidCb(const sensor_msgs::ImageConstPtr& img)
 {
+    // give to GUI
+    gui->image = *img;
+    gui->setNewImage();
 
 }
 
@@ -232,7 +235,7 @@ void RosThread::run()
     vel_pub	   = nh_.advertise<geometry_msgs::Twist>(nh_.resolveName("cmd_vel"),1);
     vel_sub	   = nh_.subscribe(nh_.resolveName("cmd_vel"),50, &RosThread::velCb, this);
 
-    vid_sub    = nh_.subscribe(video_channel,10, &RosThread::vidCb, this);
+    vid_sub    = nh_.subscribe(nh_.resolveName("ardrone/image_raw"),50, &RosThread::vidCb, this);
 
     tum_ardrone_pub	   = nh_.advertise<std_msgs::String>(nh_.resolveName("tum_ardrone/com"),50);
     tum_ardrone_sub	   = nh_.subscribe(nh_.resolveName("tum_ardrone/com"),50, &RosThread::comCb, this);

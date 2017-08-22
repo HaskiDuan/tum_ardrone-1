@@ -27,6 +27,7 @@
 #include <QtGui/QWidget>
 #include "ui_tum_ardrone_gui.h"
 #include "geometry_msgs/Twist.h"
+#include "sensor_msgs/Image.h"
 
 class RosThread;
 class PingThread;
@@ -66,6 +67,7 @@ private slots:
     void setStateestimationInfoSlot(QString);
     void setMotorSpeedsSlot(QString);
     void setArdroneStateSlot(QString);
+    void setNewImageSlot();
 
     void closeWindowSlot();
 
@@ -75,11 +77,13 @@ signals:
     void setPingsSignal(int p500, int p20000);
 	void setControlSourceSignal(int cont);
 
+
 	void addLogLineSignal(QString);
 	void setAutopilotInfoSignal(QString);
 	void setStateestimationInfoSignal(QString);
     void setMotorSpeedsSignal(QString);
     void setArdroneStateSignal(QString);
+    void setNewImageSignal();
 
 	void closeWindowSignal();
 
@@ -90,6 +94,8 @@ public:
     RosThread* rosThread;
     PingThread* pingThread;
 
+    sensor_msgs::Image image;
+
     void setCounts(unsigned int nav,unsigned int control,unsigned int pose,unsigned int joy);
     void setPings(int p500, int p20000);
     void setControlSource(ControlSource cont);
@@ -98,6 +104,7 @@ public:
     void setStateestimationInfo(std::string s);
     void setMotorSpeeds(std::string s);
     void setArdroneState(std::string s);
+    void setNewImage();
     void closeWindow();
 
 
@@ -115,6 +122,7 @@ protected:
     int mapKey(int k);
     bool isPressed[8];	//{j k l i u o q a}
     unsigned int lastRepeat[8];
+
 
 
 private:

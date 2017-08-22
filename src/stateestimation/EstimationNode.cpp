@@ -81,8 +81,8 @@ EstimationNode::EstimationNode()
 
 
 	navdata_sub       = nh_.subscribe(navdata_channel, 10, &EstimationNode::navdataCb, this);
-	vel_sub          = nh_.subscribe(control_channel,10, &EstimationNode::velCb, this);
-	vid_sub          = nh_.subscribe(video_channel,10, &EstimationNode::vidCb, this);
+    vel_sub           = nh_.subscribe(control_channel,10, &EstimationNode::velCb, this);
+    vid_sub           = nh_.subscribe(video_channel,10, &EstimationNode::vidCb, this);
 
 	dronepose_pub	   = nh_.advertise<tum_ardrone::filter_state>(output_channel,1);
 

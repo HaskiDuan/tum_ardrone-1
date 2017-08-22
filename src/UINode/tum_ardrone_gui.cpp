@@ -23,6 +23,7 @@
 #include "PingThread.h"
 #include "time.h"
 #include "../HelperFunctions.h"
+#include "sensor_msgs/Image.h"
 
 #include "ros/ros.h"
 #include "ros/package.h"
@@ -93,6 +94,9 @@ tum_ardrone_gui::tum_ardrone_gui(QWidget *parent)
 
     QObject::connect( this, SIGNAL( setArdroneStateSignal(QString) ),
                        this, SLOT( setArdroneStateSlot(QString)) );
+
+    QObject::connect( this, SIGNAL( setNewImageSignal() ),
+                       this, SLOT( setNewImageSlot() ));
 
     QObject::connect( this, SIGNAL( closeWindowSignal() ),
     		           this, SLOT( closeWindowSlot() ) );
@@ -279,6 +283,17 @@ void tum_ardrone_gui::setArdroneStateSlot(QString s)
 {
     ui.plainTextEditArdroneStatus->setPlainText(s);
 }
+
+void tum_ardrone_gui::setNewImageSlot(){
+    sensor_msgs::Image msg = image;
+    QImage currentImage(&(msg.data[0]),msg.width, msg.height, QImage::Format_RGB888);
+
+    ui.imageShow->setPixmap(QPixmap::fromImage(currentImage.rgbSwapped()));
+
+}
+
+
+
 void tum_ardrone_gui::closeWindowSlot()
 {
 	closeWindow();
@@ -320,6 +335,11 @@ void tum_ardrone_gui::setPings(int p500, int p20000)
 void tum_ardrone_gui::setArdroneState(std::string s)
 {
     emit setArdroneStateSignal(QString(s.c_str()));
+}
+
+void tum_ardrone_gui::setNewImage()
+{
+    emit setNewImageSignal();
 }
 
 

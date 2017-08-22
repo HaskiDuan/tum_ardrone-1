@@ -55,9 +55,6 @@ private:
 	// the associated thread's run function.
 	void run();
 
-    //video topic
-    std::string video_channel;
-
 	// keep Running
 	bool keepRunning;
 
@@ -109,7 +106,7 @@ public:
 	void droneposeCb(const tum_ardrone::filter_stateConstPtr statePtr);
 	void comCb(const std_msgs::StringConstPtr str);
 	void velCb(const geometry_msgs::TwistConstPtr vel);
-    void vidCb(const sensor_msgs::ImageConstPtr img);
+    void vidCb(const sensor_msgs::ImageConstPtr &img);
 	void navdataCb(const ardrone_autonomy::NavdataConstPtr navdataPtr);
 	void joyCb(const sensor_msgs::JoyConstPtr joy_msg);
 	void landCb(std_msgs::EmptyConstPtr);
