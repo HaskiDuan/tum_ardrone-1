@@ -34,23 +34,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef ARUCO_MAPPING_CPP
 #define ARUCO_MAPPING_CPP
 
-#include <aruco_mapping.h>
+#include "aruco_mapping.h"
 
 namespace aruco_mapping
 {
 
 ArucoMapping::ArucoMapping(ros::NodeHandle *nh) :
-  listener_ (new tf::TransformListener),  // Initialize TF Listener  
-  num_of_markers_ (10),                   // Number of used markers
   marker_size_(0.1),                      // Marker size in m
   calib_filename_("empty"),               // Calibration filepath
-  space_type_ ("plane"),                  // Space type - 2D plane 
+  space_type_ ("plane"),                  // Space type - 2D plane
+  num_of_markers_ (10),                   // Number of used markers
   roi_allowed_ (false),                   // ROI not allowed by default
-  first_marker_detected_(false),          // First marker not detected by defualt
   lowest_marker_id_(-1),                  // Lowest marker ID
+  first_marker_detected_(false),          // First marker not detected by defualt
+
   marker_counter_(0),                     // Reset marker counter
-  closest_camera_index_(0)                // Reset closest camera index 
-  
+  closest_camera_index_(0),               // Reset closest camera index
+
+  listener_ (new tf::TransformListener)   // Initialize TF Listener
 {
   double temp_marker_size;  
   
@@ -84,7 +85,7 @@ ArucoMapping::ArucoMapping(ros::NodeHandle *nh) :
   }
     
   //ROS publishers
-  marker_msg_pub_           = nh->advertise<aruco_mapping::ArucoMarker>("aruco_poses",1);
+  marker_msg_pub_           = nh->advertise<tum_ardrone::ArucoMarker>("aruco_poses",1);
   marker_visualization_pub_ = nh->advertise<visualization_msgs::Marker>("aruco_markers",1);
           
   //Parse data from calibration file
@@ -97,7 +98,7 @@ ArucoMapping::ArucoMapping(ros::NodeHandle *nh) :
   markers_.resize(num_of_markers_);
   
   // Default markers_ initialization
-  for(size_t i = 0; i < num_of_markers_;i++)
+  for(size_t i = 0; i < static_cast<size_t>(num_of_markers_);i++)
   {
     markers_[i].previous_marker_id = -1;
     markers_[i].visible = false;
@@ -193,7 +194,7 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
   std::vector<aruco::Marker> temp_markers;
 
   //Set visibility flag to false for all markers
-  for(size_t i = 0; i < num_of_markers_; i++)
+  for(size_t i = 0; i < static_cast<size_t>(num_of_markers_); i++)
       markers_[i].visible = false;
 
   // Save previous marker count
@@ -315,7 +316,7 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
     }
 
     // Change visibility flag of new marker
-    for(size_t j = 0;j < marker_counter_; j++)
+    for(size_t j = 0;j < static_cast<size_t>(marker_counter_); j++)
     {
       for(size_t k = 0;k < temp_markers.size(); k++)
       {
@@ -596,7 +597,7 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
   //------------------------------------------------------
   // Publish custom marker message
   //------------------------------------------------------
-  aruco_mapping::ArucoMarker marker_msg;
+  tum_ardrone::ArucoMarker marker_msg;
 
   if((any_markers_visible == true))
   {
@@ -607,7 +608,7 @@ ArucoMapping::processImage(cv::Mat input_image,cv::Mat output_image)
     marker_msg.global_camera_pose = world_position_geometry_msg_;
     marker_msg.marker_ids.clear();
     marker_msg.global_marker_poses.clear();
-    for(size_t j = 0; j < marker_counter_; j++)
+    for(size_t j = 0; j < static_cast<size_t>(marker_counter_); j++)
     {
       if(markers_[j].visible == true)
       {

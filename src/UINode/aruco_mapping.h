@@ -57,7 +57,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <opencv2/highgui/highgui.hpp>
 
 // Custom message
-#include <aruco_mapping/ArucoMarker.h>
+#include <tum_ardrone/ArucoMarker.h>
 
 /** \brief Aruco mapping namespace */
 namespace aruco_mapping
