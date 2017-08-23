@@ -5,7 +5,11 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tum_ardrone)
 
+
 ## Find catkin macros and libraries
+find_package(OpenCV REQUIRED)
+find_package(aruco REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   ardrone_autonomy
   cv_bridge
@@ -15,19 +19,25 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   std_srvs
   message_generation
+  image_transport
   roscpp
   rospy
+  tf
+
+  visualization_msgs
+  aruco
+  camera_calibration_parsers
 )
 
 # Compile third party libs
 include(ExternalProject)
 ExternalProject_Add(thirdparty
-	URL ${PROJECT_SOURCE_DIR}/thirdparty/thirdparty.tar.gz
-	PREFIX ${CMAKE_BINARY_DIR}/thirdparty
-	CONFIGURE_COMMAND ""
-	BUILD_COMMAND make
-	INSTALL_COMMAND ""
-	BUILD_IN_SOURCE 1
+        URL ${PROJECT_SOURCE_DIR}/thirdparty/thirdparty.tar.gz
+        PREFIX ${CMAKE_BINARY_DIR}/thirdparty
+        CONFIGURE_COMMAND ""
+        BUILD_COMMAND make
+        INSTALL_COMMAND ""
+        BUILD_IN_SOURCE 1
 )
 
 # ------------------- add dynamic reconfigure api ------------------------------------
@@ -42,21 +52,17 @@ generate_dynamic_reconfigure_options(
 ################################################
 
 ## Generate messages in the 'msg' folder
-add_message_files(FILES filter_state.msg)
-
-## Generate services in the 'srv' folder
-add_service_files(
-	DIRECTORY srv
-	FILES
-	SetReference.srv
-	SetMaxControl.srv
-	SetInitialReachDistance.srv
-	SetStayWithinDistance.srv
-	SetStayTime.srv
+add_message_files(
+        DIRECTORY msg
+        FILES
+        filter_state.msg
+        ArucoMarker.msg
 )
 
-## Generate added messages 
-generate_messages(DEPENDENCIES std_msgs)
+## Generate added messages
+generate_messages(DEPENDENCIES
+        std_msgs
+        geometry_msgs)
 
 ###################################
 ## catkin specific configuration ##
@@ -70,12 +76,12 @@ include_directories(${catkin_INCLUDE_DIRS})
 
 # --------------------------- stateestimation & PTAM --------------------------------
 # set header ans source files
-set(STATEESTIMATION_SOURCE_FILES       
-	src/stateestimation/GLWindow2.cc
-	src/stateestimation/GLWindowMenu.cc  
-	src/stateestimation/main_stateestimation.cpp
-	src/stateestimation/DroneKalmanFilter.cpp
-	src/stateestimation/Predictor.cpp
+set(STATEESTIMATION_SOURCE_FILES
+        src/stateestimation/GLWindow2.cc
+        src/stateestimation/GLWindowMenu.cc
+        src/stateestimation/main_stateestimation.cpp
+        src/stateestimation/DroneKalmanFilter.cpp
+        src/stateestimation/Predictor.cpp
   src/stateestimation/PTAMWrapper.cpp
   src/stateestimation/MapView.cpp
   src/stateestimation/EstimationNode.cpp
@@ -93,13 +99,13 @@ set(STATEESTIMATION_SOURCE_FILES
   src/stateestimation/PTAM/SmallBlurryImage.cc
   src/stateestimation/PTAM/Tracker.cc
 )
-set(STATEESTIMATION_HEADER_FILES    
-  src/stateestimation/GLWindow2.h 
-  src/stateestimation/GLWindowMenu.h    
-  src/stateestimation/MouseKeyHandler.h  
-  src/HelperFunctions.h   
-  src/stateestimation/DroneKalmanFilter.h        
-  src/stateestimation/Predictor.h 
+set(STATEESTIMATION_HEADER_FILES
+  src/stateestimation/GLWindow2.h
+  src/stateestimation/GLWindowMenu.h
+  src/stateestimation/MouseKeyHandler.h
+  src/HelperFunctions.h
+  src/stateestimation/DroneKalmanFilter.h
+  src/stateestimation/Predictor.h
   src/stateestimation/PTAMWrapper.h
   src/stateestimation/MapView.h
   src/stateestimation/EstimationNode.h
@@ -128,41 +134,41 @@ set(STATEESTIMATION_HEADER_FILES
 
 # set required libs and headers
 include_directories(
-  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/TooN/include 
-  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/libcvd/include 
-  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/gvars3/include 
-)  
+  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/TooN/include
+  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/libcvd/include
+  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/gvars3/include
+)
 
 link_directories(
-  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/libcvd/lib 
-  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/gvars3/lib 
+  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/libcvd/lib
+  ${CMAKE_BINARY_DIR}/thirdparty/src/thirdparty/gvars3/lib
 )
 set(PTAM_LIBRARIES GL glut cvd GVars3 blas lapack)
 add_definitions(-DKF_REPROJ)
 
 # build!
 add_executable(drone_stateestimation ${STATEESTIMATION_SOURCE_FILES} ${STATEESTIMATION_HEADER_FILES})
-set_target_properties(drone_stateestimation PROPERTIES COMPILE_FLAGS "-D_LINUX -D_REENTRANT -Wall  -O3 -march=nocona -msse3") 
+set_target_properties(drone_stateestimation PROPERTIES COMPILE_FLAGS "-D_LINUX -D_REENTRANT -Wall  -O3 -march=nocona -msse3")
 target_link_libraries(drone_stateestimation ${PTAM_LIBRARIES} ${catkin_LIBRARIES})
 add_dependencies(drone_stateestimation thirdparty ${PROJECT_NAME}_gencpp ${PROJECT_NAME}_gencfg)
 
 # ------------------------- autopilot & KI -----------------------------------------
 # set header ans source files
-set(AUTOPILOT_SOURCE_FILES         
-	src/autopilot/main_autopilot.cpp  
-	src/autopilot/ControlNode.cpp
-	src/autopilot/DroneController.cpp
-	src/autopilot/KI/KILand.cpp
-	src/autopilot/KI/KIAutoInit.cpp
-	src/autopilot/KI/KIFlyTo.cpp
+set(AUTOPILOT_SOURCE_FILES
+        src/autopilot/main_autopilot.cpp
+        src/autopilot/ControlNode.cpp
+        src/autopilot/DroneController.cpp
+        src/autopilot/KI/KILand.cpp
+        src/autopilot/KI/KIAutoInit.cpp
+        src/autopilot/KI/KIFlyTo.cpp
 )
-set(AUTOPILOT_HEADER_FILES        
-	src/autopilot/ControlNode.h
-	src/autopilot/DroneController.h
-	src/autopilot/KI/KILand.h
-	src/autopilot/KI/KIAutoInit.h
-	src/autopilot/KI/KIFlyTo.h
-	src/autopilot/KI/KIProcedure.h
+set(AUTOPILOT_HEADER_FILES
+        src/autopilot/ControlNode.h
+        src/autopilot/DroneController.h
+        src/autopilot/KI/KILand.h
+        src/autopilot/KI/KIAutoInit.h
+        src/autopilot/KI/KIFlyTo.h
+        src/autopilot/KI/KIProcedure.h
 )
 
 # build!
@@ -172,26 +178,28 @@ add_dependencies(drone_autopilot thirdparty ${PROJECT_NAME}_gencpp ${PROJECT_NAM
 
 # ---------------------------- GUI --------------------------------------------------
 # set header ans source files
-set(GUI_SOURCE_FILES         
-	src/UINode/main_GUI.cpp  
-	src/UINode/tum_ardrone_gui.cpp  
-	src/UINode/RosThread.cpp  
-	src/UINode/PingThread.cpp  
+set(GUI_SOURCE_FILES
+        src/UINode/main_GUI.cpp
+        src/UINode/tum_ardrone_gui.cpp
+        src/UINode/RosThread.cpp
+        src/UINode/PingThread.cpp
+        src/UINode/aruco_mapping.cpp
 )
 
-set(GUI_HEADER_FILES        
-	src/UINode/tum_ardrone_gui.h 
-	src/UINode/RosThread.h  
-	src/UINode/PingThread.h  
+set(GUI_HEADER_FILES
+        src/UINode/tum_ardrone_gui.h
+        src/UINode/RosThread.h
+        src/UINode/PingThread.h
+        src/UINode/aruco_mapping.h
 )
 
 # *.ui
-set(GUI_UI_FILES        
-	src/UINode/tum_ardrone_gui.ui 
+set(GUI_UI_FILES
+        src/UINode/tum_ardrone_gui.ui
 )
 
 # *.qrc
-set(GUI_RESOURCE_FILES        
+set(GUI_RESOURCE_FILES
 )
 
 # do QT stuff
@@ -207,5 +215,3 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_executable(drone_gui ${GUI_SOURCE_FILES} ${GUI_RESOURCE_FILES_CPP} ${GUI_UI_FILES_HPP} ${GUI_HEADER_FILES_HPP})
 target_link_libraries(drone_gui ${QT_LIBRARIES} cvd ${catkin_LIBRARIES})
 add_dependencies(drone_gui thirdparty ${PROJECT_NAME}_gencpp ${PROJECT_NAME}_gencfg)
-
-
