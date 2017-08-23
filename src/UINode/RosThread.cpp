@@ -256,6 +256,13 @@ void RosThread::run()
     toggleCam_srv        = nh_.serviceClient<std_srvs::Empty>(nh_.resolveName("ardrone/togglecam"),1);
     flattrim_srv         = nh_.serviceClient<std_srvs::Empty>(nh_.resolveName("ardrone/flattrim"),1);
 
+    // Aruco mapping object
+    aruco_mapping::ArucoMapping obj(&nh_);
+
+    // Image node and subscriber
+    image_transport::ImageTransport it(nh_);
+    //image_transport::Subscriber image_sub = it.subscribe("ardrone/image_raw",1,&aruco_mapping::ArucoMapping::imageCallback, &obj);
+
 	ros::Time last = ros::Time::now();
 	ros::Time lastHz = ros::Time::now();
 	while(keepRunning && nh_.ok())

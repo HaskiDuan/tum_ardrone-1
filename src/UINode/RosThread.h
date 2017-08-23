@@ -33,6 +33,8 @@
 #include "std_srvs/Empty.h"
 #include "std_msgs/Empty.h"
 #include "sensor_msgs/Image.h"
+#include <image_transport/image_transport.h>
+#include "aruco_mapping.h"
 
 class tum_ardrone_gui;
 
@@ -81,6 +83,8 @@ private:
 
 
 	ros::NodeHandle nh_;
+
+
 
 	// counters for Hz
 	unsigned int dronePoseCount;
